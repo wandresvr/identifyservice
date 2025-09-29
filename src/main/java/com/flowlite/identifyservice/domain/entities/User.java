@@ -6,24 +6,23 @@ import lombok.Data;
 import lombok.Builder;
 
 import java.util.UUID;
-import java.util.Optional;
 
 @Data
 @Builder
 public class User {
 
-    private UUID id;
-    private Username username;
-    private Email email;
-    private Password password;   // ahora puede ser null
-    private Role role;
-    private boolean active;
+    private UUID id;                      // Identidad única
+    private Username username;            // VO
+    private Email email;                  // VO
+    private Password password;            // VO (encriptada)
+    private Role role;                    // Entidad/enum
+    private boolean active;               // Estado de la cuenta
 
-    public void deactivate() { this.active = false; }
-    public void changeRole(Role newRole) { this.role = newRole; }
-
-    // ✅ nuevo getter seguro
-    public Optional<Password> getPassword() {
-        return Optional.ofNullable(password);
+    public void deactivate() {
+        this.active = false;
     }
+    public void changeRole(Role newRole) {
+        this.role = newRole;
+    }
+
 }
