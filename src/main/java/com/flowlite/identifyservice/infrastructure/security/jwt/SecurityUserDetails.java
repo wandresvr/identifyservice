@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import com.flowlite.identifyservice.domain.valueobjects.Password;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,13 +18,14 @@ public class SecurityUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Adaptamos el Role de dominio a un GrantedAuthority
         return List.of(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword().getValue();
+        return user.getPassword()
+                .map(Password::getValue)
+                .orElse(null); // o "" si prefieres
     }
 
     @Override
@@ -33,7 +35,7 @@ public class SecurityUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; // puedes mapearlo a algún campo en dominio si quieres
+        return true;
     }
 
     @Override

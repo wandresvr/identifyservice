@@ -13,7 +13,11 @@ public class UserMapper {
                 .id(user.getId())
                 .username(user.getUsername().getValue())
                 .email(user.getEmail().getValue())
-                .password(user.getPassword().getValue())
+                .password(
+                        user.getPassword()
+                                .map(Password::getValue)   // ✅ usa Optional del dominio
+                                .orElse(null)              // si es social login, guardamos null
+                )
                 .role(user.getRole())
                 .active(user.isActive())
                 .build();
@@ -24,7 +28,11 @@ public class UserMapper {
                 .id(entity.getId())
                 .username(new Username(entity.getUsername()))
                 .email(new Email(entity.getEmail()))
-                .password(new Password(entity.getPassword()))
+                .password(
+                        entity.getPassword() != null
+                                ? new Password(entity.getPassword())
+                                : null   // ✅ soporta social login
+                )
                 .role(entity.getRole())
                 .active(entity.isActive())
                 .build();

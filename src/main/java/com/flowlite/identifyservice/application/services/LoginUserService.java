@@ -20,8 +20,12 @@ public class LoginUserService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
-        // Aquí validarías password real con BCrypt (ejemplo simplificado)
-        if (!passwordEncoder.matches(rawPassword, user.getPassword().getValue())) {
+        // ✅ Validar que el usuario tenga contraseña
+        String storedPassword = user.getPassword()
+                .map(p -> p.getValue())
+                .orElseThrow(() -> new IllegalStateException("El usuario no tiene contraseña local (probablemente login social)"));
+
+        if (!passwordEncoder.matches(rawPassword, storedPassword)) {
             throw new IllegalArgumentException("Credenciales inválidas");
         }
 
